@@ -38,17 +38,22 @@ Choose the path that best matches your evaluation preference:
 
 ### Option A: Fast-Track Evaluation (Recommended)
 > **Goal:** Run the application immediately using the candidate's pre-configured LaunchDarkly environment. All 3 flags, targeting rules, and the active A/B experiment are already live and collecting data!
+>
+> 🔑 **Demo Keys & Workspace Access:**
+> * The live demo keys are provided directly in the **submission email / candidate portal**.
+> * Need access to explore the LaunchDarkly dashboard directly? Simply email me or reach out to your recruiter, and I will instantly invite you as a member to my trial workspace!
+> * Alternatively, follow **Option B** below to spin up fresh flags in your own tenant.
 
 1. Clone this repository:
    ```bash
-   git clone <REPO_URL>
-   cd launchdarkly_chatbot
+   git clone https://github.com/jspiikkila/piikkila-LD-chatbot.git
+   cd piikkila-LD-chatbot
    ```
 2. Create your `.env` file from the template:
    ```bash
    cp .env.example .env
    ```
-3. Populate `.env` with the demo credentials (provided via email / submission form, or request invite access to the tenant):
+3. Populate `.env` with the demo credentials (from your submission email):
    ```bash
    LD_SDK_KEY="<provided-demo-server-key>"
    LD_CLIENT_ID="<provided-demo-client-id>"
