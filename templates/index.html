@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatOps AI - LaunchDarkly Demo</title>
+    <link rel="stylesheet" href="/static/style.css">
+    
+    <!-- LaunchDarkly Client-Side SDK -->
+    <script src="https://unpkg.com/launchdarkly-js-client-sdk@3"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header & User Context Switcher -->
+        <header>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h1>ChatOps AI</h1>
+                <span id="ld-status-badge" style="font-size: 0.75rem; background: #1f3a2b; color: #4ade80; padding: 2px 8px; border-radius: 12px; font-weight: 500;">
+                    🟢 LD Streaming
+                </span>
+            </div>
+            <div class="user-context">
+                <label for="user-select">Login as:</label>
+                <select id="user-select">
+                    <option value="free">Free User (Anonymous)</option>
+                    <option value="premium">Premium User (Jane Doe)</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Main Chat Interface -->
+        <main>
+            <div id="chat-window" class="chat-window">
+                <div class="message bot">
+                    Hello! I'm ChatOps AI. Send me a message!
+                </div>
+            </div>
+            
+            <!-- Feature Flag: Typing Indicator (Part 1: Release & Remediate) -->
+            <div id="typing-indicator" class="typing-indicator hidden">
+                Bot is typing...
+            </div>
+            
+            <!-- Feature Flag: Premium Summary Feature (Part 2: Targeting) -->
+            <div id="premium-features" class="premium-features hidden">
+                <button id="summarize-btn">🌟 Premium Feature: Summarize Chat</button>
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="chat-input" placeholder="Type your message here..." />
+                <button id="send-btn">Send</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Inject LD Client ID from Flask -->
+    <script>
+        window.LD_CLIENT_ID = "{{ ld_client_id }}";
+    </script>
+    <script src="/static/app.js"></script>
+</body>
+</html>

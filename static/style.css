@@ -1,0 +1,165 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: #202b3c; /* LaunchDarkly blue/grey */
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.user-context select {
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.chat-window {
+    height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+    background: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 80%;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.message.user {
+    background: #ebf5ff;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.message.bot {
+    background: #e4e6eb;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+/* Feedback Buttons for Experimentation */
+.feedback-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+.feedback-btn {
+    cursor: pointer;
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px 5px;
+}
+.feedback-btn:hover {
+    background: #eee;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.typing-indicator {
+    padding: 0 20px 10px;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+}
+
+.premium-features {
+    padding: 10px 20px;
+    background: #fff3cd;
+    border-top: 1px solid #ffeeba;
+    text-align: center;
+}
+
+.premium-features button {
+    background: #ffc107;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.input-area {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    background: white;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+.input-area button {
+    background: #405BFF; /* LaunchDarkly Blue */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.input-area button:hover {
+    background: #2b44d3;
+}
+
+/* Toast Notifications */
+.toast {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #202b3c;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
