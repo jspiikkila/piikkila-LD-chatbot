@@ -40,8 +40,7 @@ Choose the path that best matches your evaluation preference:
 > **Goal:** Run the application immediately using the candidate's pre-configured LaunchDarkly environment. All 3 flags, targeting rules, and the active A/B experiment are already live and collecting data!
 >
 > 🔑 **Demo Keys & Workspace Access:**
-> * The live demo keys are provided directly in the **submission email / candidate portal**.
-> * Need access to explore the LaunchDarkly dashboard directly? Simply email me or reach out to your recruiter, and I will instantly invite you as a member to my trial workspace!
+> * To request the live demo keys or to receive an instant member invite to my LaunchDarkly trial dashboard, please email me directly at **[jspiikkila@gmail.com](mailto:jspiikkila@gmail.com)**.
 > * Alternatively, follow **Option B** below to spin up fresh flags in your own tenant.
 
 1. Clone this repository:
