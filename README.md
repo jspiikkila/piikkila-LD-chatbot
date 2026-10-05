@@ -121,7 +121,7 @@ Configure your new `.env` file with your SDK keys and run `python app.py`.
 
 ---
 
-## 🎬 3-Minute Interview Demo Walkthrough
+## 🎬 3-Minute Demo Walkthrough
 
 ### 1. Part 1: Instant Releases & Rollbacks (No Reload)
 1. Open `http://localhost:5000`.
