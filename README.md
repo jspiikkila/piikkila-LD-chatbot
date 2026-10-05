@@ -1,6 +1,6 @@
-# ChatOps AI - LaunchDarkly Technical Exercise
+# ChatOps AI - LaunchDarkly Homework Exercise
 
-This repository is a demonstration of LaunchDarkly's capabilities, fulfilling all requirements of the LaunchDarkly SE Technical Exercise. 
+This repository is a demonstration of LaunchDarkly's basic capabilities, fulfilling all requirements of the SE Technical Exercise. 
 
 The application is a GenAI Chatbot interface ("ChatOps AI") built with **Python (Flask)** on the backend and **JavaScript (HTML/CSS)** on the frontend.
 
