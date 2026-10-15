@@ -35,7 +35,7 @@ Choose the path that best matches your evaluation preference:
 ---
 
 ### Option A: Fast-Track Evaluation (Recommended)
-> **Goal:** Run the application immediately using the candidate's pre-configured LaunchDarkly environment. All 3 flags, targeting rules, and the active A/B experiment are already live and collecting data!
+> **Goal:** Run the application immediately using the jspiikkila's pre-configured LaunchDarkly environment. All 3 flags, targeting rules, and the active A/B experiment are already live and collecting data!
 >
 > 🔑 **Demo Keys & Workspace Access:**
 > * To request the live demo keys or to receive an instant member invite to my LaunchDarkly trial dashboard, please email me directly at **[jspiikkila@gmail.com](mailto:jspiikkila@gmail.com)**.
