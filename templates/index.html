@@ -42,29 +42,43 @@
             <div class="drawer-grid">
                 <!-- Column 1: Guided Evaluator Walkthrough -->
                 <div class="drawer-card guide-card">
-                    <h3>📋 Interactive Evaluation Guide</h3>
-                    <ol class="step-list">
-                        <li>
-                            <strong>1. Target Personas (Part 2):</strong>
-                            Switch the persona dropdown above. Notice the <strong>Targeting HUD</strong> update instantly with LaunchDarkly's evaluation reason code.
-                        </li>
-                        <li>
-                            <strong>2. Release & Kill Switch (Part 1):</strong>
-                            Toggle <em>Simulate Latency Spike</em> below. Notice response delays and the APM alert. Click <strong>⚡ Fire Kill Switch</strong> to watch LD restore health in real-time with zero page reload.
-                        </li>
-                        <li>
-                            <strong>3. A/B Experimentation (Part 3):</strong>
-                            Send a message and click <strong>👍 Helpful</strong> to record conversion metrics in LaunchDarkly.
-                        </li>
-                    </ol>
+                    <h3>📋 How to Test This Demo</h3>
+                    <div class="steps-container">
+                        <div class="step-card">
+                            <div class="step-header">
+                                <span class="step-badge">1</span>
+                                <strong>Targeting & Entitlements (Part 2)</strong>
+                            </div>
+                            <p class="step-action"><strong>👉 What you do:</strong> Switch the <em>Persona</em> dropdown at top right to <strong>Alice</strong> or <strong>Charlie</strong>.</p>
+                            <p class="step-result"><strong>👀 What to observe:</strong> The flag status on the right changes from <code>FALSE (BLOCKED)</code> to <code>TRUE (SERVED)</code>, and the gold <strong>"Summarize Conversation"</strong> button appears above the chat.</p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-header">
+                                <span class="step-badge">2</span>
+                                <strong>Automated Incident Kill Switch (Part 1)</strong>
+                            </div>
+                            <p class="step-action"><strong>👉 What you do:</strong> Check <em>Simulate Latency Spike</em> on the right, send a chat message, then click <strong>⚡ Fire Kill Switch Trigger</strong>.</p>
+                            <p class="step-result"><strong>👀 What to observe:</strong> A red APM latency alert fires. Clicking the kill switch disables the typing indicator in milliseconds—instantly restoring normal speed with <strong>zero page reload</strong>.</p>
+                        </div>
+
+                        <div class="step-card">
+                            <div class="step-header">
+                                <span class="step-badge">3</span>
+                                <strong>AI A/B Experimentation (Part 3)</strong>
+                            </div>
+                            <p class="step-action"><strong>👉 What you do:</strong> Send any message and click <strong>👍 Helpful</strong> under the bot's response.</p>
+                            <p class="step-result"><strong>👀 What to observe:</strong> Records satisfaction conversion metrics for LaunchDarkly's live A/B experiment dashboard.</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Column 2: Live LaunchDarkly HUD & Controls -->
+                <!-- Column 2: Live Feature Flag Status & Controls -->
                 <div class="drawer-card hud-card">
-                    <h3>🎯 LaunchDarkly Live HUD</h3>
+                    <h3>🎯 Live Feature Flag Status</h3>
                     
                     <div class="hud-item">
-                        <span class="hud-label">Active Context:</span>
+                        <span class="hud-label">Current Persona:</span>
                         <div class="hud-values">
                             <strong id="active-user-name">Bob (Standard)</strong>
                             <code id="active-context-key">key: bob-standard</code>
@@ -74,7 +88,7 @@
                     </div>
 
                     <div class="hud-item">
-                        <span class="hud-label">Flag <code>enable-premium-features</code>:</span>
+                        <span class="hud-label">Premium Feature Flag (<code>enable-premium-features</code>):</span>
                         <div class="hud-values">
                             <span id="evaluation-value-pill" class="eval-pill eval-false">false</span>
                             <span id="evaluation-reason-pill" class="eval-reason-pill">Reason: FALLTHROUGH</span>
@@ -82,10 +96,10 @@
                     </div>
 
                     <div class="hud-item incident-hud-item">
-                        <span class="hud-label">Part 1 Remediation Controls:</span>
+                        <span class="hud-label">Incident Simulation & Remediation:</span>
                         <label class="switch-label">
                             <input type="checkbox" id="simulate-incident-toggle">
-                            <span>Simulate Latency Spike (APM Incident)</span>
+                            <span>Simulate Latency Spike (APM Alert)</span>
                         </label>
                         <div class="trigger-actions">
                             <button id="fire-trigger-btn" class="danger-btn">⚡ Fire Kill Switch Trigger</button>
@@ -96,6 +110,7 @@
                     </div>
                 </div>
             </div>
+
         </section>
 
         <!-- Live APM Alert Banners -->
