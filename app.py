@@ -190,6 +190,7 @@ atexit.register(close_ld_client)
 if __name__ == '__main__':
     # Use port 5001 by default to prevent port conflicts with macOS ControlCenter / AirPlay on 5000
     port = int(os.environ.get("PORT", 5001))
-    print(f"🚀 ChatOps AI running on http://localhost:{port}")
+    print(f"🚀 Piikkila's ChatOps AI running on http://localhost:{port}")
     app.run(debug=True, port=port)
+
 
