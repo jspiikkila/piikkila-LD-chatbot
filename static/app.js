@@ -282,16 +282,49 @@ if (triggerUrlInput) {
     });
 }
 
-// Collapsible Panel Header
-const panelHeader = document.getElementById('panel-toggle-btn');
-const panelBody = document.getElementById('remediation-panel-body');
-if (panelHeader && panelBody) {
-    panelHeader.addEventListener('click', (e) => {
-        // Don't toggle if clicking a badge inside header
-        if (e.target.id === 'flag-status-pill') return;
-        panelBody.classList.toggle('hidden');
+// Drawer Toggle Handler
+const drawerToggleBtn = document.getElementById('drawer-toggle-btn');
+const demoDrawer = document.getElementById('demo-drawer');
+const drawerChevron = document.getElementById('drawer-chevron');
+
+if (drawerToggleBtn && demoDrawer) {
+    drawerToggleBtn.addEventListener('click', () => {
+        const isHidden = demoDrawer.classList.toggle('hidden');
+        if (drawerChevron) {
+            drawerChevron.innerText = isHidden ? '▼' : '▲';
+        }
     });
 }
+
+// Copy curl Command Button
+const copyCurlBtn = document.getElementById('copy-curl-btn');
+if (copyCurlBtn) {
+    copyCurlBtn.addEventListener('click', () => {
+        const url = (triggerUrlInput ? triggerUrlInput.value.trim() : '') || window.LD_TRIGGER_URL || '';
+        if (!url) {
+            showToast("⚠️ No LaunchDarkly Trigger Webhook URL found.");
+            return;
+        }
+        const cmd = `curl -X POST ${url}`;
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(cmd).then(() => {
+                showToast("📋 curl command copied to clipboard!");
+            }).catch(() => {
+                showToast("📋 curl command ready!");
+            });
+        } else {
+            showToast("📋 curl command ready!");
+        }
+    });
+}
+
+// Quick Send for onboarding prompt chips
+window.quickSend = function(promptText) {
+    if (chatInput) {
+        chatInput.value = promptText;
+        sendMessage();
+    }
+};
 
 // Incident Toggle handler
 if (incidentToggle) {
@@ -301,6 +334,7 @@ if (incidentToggle) {
         }
     });
 }
+
 
 // Fire LD Trigger Webhook Button
 if (fireTriggerBtn) {

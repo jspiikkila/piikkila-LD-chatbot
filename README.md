@@ -63,7 +63,7 @@ Choose the path that best matches your evaluation preference:
    pip install -r requirements.txt
    python app.py
    ```
-5. Navigate to `http://localhost:5000` to begin the demo walkthrough!
+5. Navigate to `http://localhost:5001` to begin the demo walkthrough!
 
 ---
 
@@ -128,7 +128,7 @@ Configure your new `.env` file with your SDK keys and run `python app.py`.
 ## 🎬 3-Minute Demo Walkthrough
 
 ### 1. Part 1: Instant Releases & Rollbacks (No Reload)
-1. Open `http://localhost:5000`.
+1. Open `http://localhost:5001`.
 2. In LaunchDarkly, toggle **`enable-typing-indicator`** to **ON**.
 3. Send a message in the chat. Note the "Bot is typing..." indicator appears for 1.2s before the response, and the demo status badge shows **"Flag: ON (Released)"**.
 4. **Instant Rollback**: Toggle the flag to **OFF** in LaunchDarkly. Send another message. Notice the indicator disappears immediately without refreshing the browser.

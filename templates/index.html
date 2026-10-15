@@ -12,109 +12,138 @@
 <body>
     <div class="container">
         <!-- Header & User Context Switcher -->
+        <!-- Header: Brand, Context Switcher, and Demo Tools Toggle -->
         <header>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <h1>ChatOps AI</h1>
-                <span id="ld-status-badge" style="font-size: 0.75rem; background: #1f3a2b; color: #4ade80; padding: 2px 8px; border-radius: 12px; font-weight: 500;">
-                    🟢 LD Streaming
-                </span>
+            <div class="brand">
+                <div class="logo-icon">🤖</div>
+                <div>
+                    <h1>ChatOps AI</h1>
+                    <span id="ld-status-badge" class="status-badge">🟢 LD Streaming</span>
+                </div>
             </div>
-            <div class="user-context">
-                <label for="user-select">Switch Context:</label>
-                <select id="user-select">
-                    <option value="standard">Bob (Free Plan - Default Rule)</option>
-                    <option value="enterprise">Alice (Enterprise Plan - Rule Target)</option>
-                    <option value="beta">Charlie (Free Plan - Individual Target)</option>
-                </select>
+
+            <div class="header-actions">
+                <div class="user-select-group">
+                    <label for="user-select">Persona:</label>
+                    <select id="user-select">
+                        <option value="standard">Bob (Free - Standard)</option>
+                        <option value="enterprise">Alice (Enterprise - Rule Match)</option>
+                        <option value="beta">Charlie (Free - Individual VIP)</option>
+                    </select>
+                </div>
+                <button id="drawer-toggle-btn" class="drawer-toggle-btn" title="Toggle Demo Guide & Tools">
+                    🛠️ Demo Guide & Tools <span id="drawer-chevron">▼</span>
+                </button>
             </div>
         </header>
 
-        <!-- Part 2: Live Targeting & Context Inspector -->
-        <section class="targeting-inspector-panel" id="targeting-inspector">
-            <div class="inspector-row">
-                <div class="context-details">
-                    <span class="inspector-label">👤 Context:</span>
-                    <strong id="active-user-name">Bob (Standard)</strong>
-                    <code id="active-context-key">key: bob-standard</code>
-                    <span class="badge" id="active-context-plan">plan: free</span>
-                    <span class="badge" id="active-context-role">role: viewer</span>
+        <!-- Collapsible Interactive Demo Guide & Inspector Drawer -->
+        <section id="demo-drawer" class="demo-drawer hidden">
+            <div class="drawer-grid">
+                <!-- Column 1: Guided Evaluator Walkthrough -->
+                <div class="drawer-card guide-card">
+                    <h3>📋 Interactive Evaluation Guide</h3>
+                    <ol class="step-list">
+                        <li>
+                            <strong>1. Target Personas (Part 2):</strong>
+                            Switch the persona dropdown above. Notice the <strong>Targeting HUD</strong> update instantly with LaunchDarkly's evaluation reason code.
+                        </li>
+                        <li>
+                            <strong>2. Release & Kill Switch (Part 1):</strong>
+                            Toggle <em>Simulate Latency Spike</em> below. Notice response delays and the APM alert. Click <strong>⚡ Fire Kill Switch</strong> to watch LD restore health in real-time with zero page reload.
+                        </li>
+                        <li>
+                            <strong>3. A/B Experimentation (Part 3):</strong>
+                            Send a message and click <strong>👍 Helpful</strong> to record conversion metrics in LaunchDarkly.
+                        </li>
+                    </ol>
                 </div>
-            </div>
-            <div class="inspector-row evaluation-row">
-                <span class="inspector-label">🎯 LD Evaluation (<code>enable-premium-features</code>):</span>
-                <span id="evaluation-value-pill" class="eval-pill eval-false">false</span>
-                <span id="evaluation-reason-pill" class="eval-reason-pill">Reason: FALLTHROUGH</span>
+
+                <!-- Column 2: Live LaunchDarkly HUD & Controls -->
+                <div class="drawer-card hud-card">
+                    <h3>🎯 LaunchDarkly Live HUD</h3>
+                    
+                    <div class="hud-item">
+                        <span class="hud-label">Active Context:</span>
+                        <div class="hud-values">
+                            <strong id="active-user-name">Bob (Standard)</strong>
+                            <code id="active-context-key">key: bob-standard</code>
+                            <span class="badge" id="active-context-plan">plan: free</span>
+                            <span class="badge" id="active-context-role">role: viewer</span>
+                        </div>
+                    </div>
+
+                    <div class="hud-item">
+                        <span class="hud-label">Flag <code>enable-premium-features</code>:</span>
+                        <div class="hud-values">
+                            <span id="evaluation-value-pill" class="eval-pill eval-false">false</span>
+                            <span id="evaluation-reason-pill" class="eval-reason-pill">Reason: FALLTHROUGH</span>
+                        </div>
+                    </div>
+
+                    <div class="hud-item incident-hud-item">
+                        <span class="hud-label">Part 1 Remediation Controls:</span>
+                        <label class="switch-label">
+                            <input type="checkbox" id="simulate-incident-toggle">
+                            <span>Simulate Latency Spike (APM Incident)</span>
+                        </label>
+                        <div class="trigger-actions">
+                            <button id="fire-trigger-btn" class="danger-btn">⚡ Fire Kill Switch Trigger</button>
+                            <button id="copy-curl-btn" class="secondary-btn">📋 Copy curl</button>
+                        </div>
+                        <input type="hidden" id="trigger-url-input" />
+                        <span id="flag-status-pill" class="hidden"></span>
+                    </div>
+                </div>
             </div>
         </section>
 
-
-        <!-- Part 1: Automated Remediation & Incident Simulator -->
-        <section class="demo-remediation-panel" id="remediation-panel">
-            <div class="panel-header" id="panel-toggle-btn">
-                <span class="panel-title">🛡️ <strong>Part 1: Release & Remediate Simulator</strong></span>
-                <span class="panel-status-tag" id="flag-status-pill">Flag: Checking...</span>
+        <!-- Live APM Alert Banners -->
+        <div id="apm-alert-banner" class="alert-banner warning hidden">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <strong>APM Alert: High Latency Detected (&gt;3500ms)</strong>
+                <p>Typing indicator service experiencing latency regression. Click <strong>⚡ Fire Kill Switch</strong> to remediate.</p>
             </div>
-            
-            <div class="panel-body" id="remediation-panel-body">
-                <div class="incident-controls">
-                    <label class="switch-label">
-                        <input type="checkbox" id="simulate-incident-toggle">
-                        <span>Simulate Production Latency Spike (APM Incident)</span>
-                    </label>
-                </div>
+        </div>
 
-                <div id="apm-alert-banner" class="alert-banner warning hidden">
-                    <div class="alert-icon">⚠️</div>
-                    <div class="alert-content">
-                        <strong>APM Alert: High Latency Detected (>3500ms)</strong>
-                        <p>The typing indicator service is experiencing critical latency spikes. Automated remediation trigger required.</p>
-                    </div>
-                </div>
-
-                <div id="apm-resolved-banner" class="alert-banner success hidden">
-                    <div class="alert-icon">✅</div>
-                    <div class="alert-content">
-                        <strong>Remediation Successful! (Zero Reload)</strong>
-                        <p>LaunchDarkly disabled <code>enable-typing-indicator</code> in milliseconds via Webhook Trigger. Service restored.</p>
-                    </div>
-                </div>
-
-                <div class="trigger-input-group">
-                    <label for="trigger-url-input">LaunchDarkly Flag Trigger Webhook URL:</label>
-                    <div class="input-with-btn">
-                        <input type="text" id="trigger-url-input" placeholder="Paste LD Generic Webhook URL or use curl below" />
-                        <button id="fire-trigger-btn" class="danger-btn">⚡ Fire LD Trigger</button>
-                    </div>
-                    <small class="helper-text">
-                        Or run via terminal: <code id="curl-helper-code">curl -X POST &lt;TRIGGER_URL&gt;</code>
-                    </small>
-                </div>
+        <div id="apm-resolved-banner" class="alert-banner success hidden">
+            <div class="alert-icon">✅</div>
+            <div class="alert-content">
+                <strong>Remediation Successful! (Zero Reload)</strong>
+                <p>LaunchDarkly disabled <code>enable-typing-indicator</code> via Webhook Trigger. Normal latency restored.</p>
             </div>
-        </section>
+        </div>
 
         <!-- Main Chat Interface -->
         <main>
             <div id="chat-window" class="chat-window">
-                <div class="message bot">
-                    Hello! I'm ChatOps AI. Send me a message!
+                <div class="welcome-card">
+                    <h2>👋 Welcome to ChatOps AI</h2>
+                    <p>This application demonstrates LaunchDarkly's enterprise capabilities. Try these quick interactions:</p>
+                    <div class="welcome-prompts">
+                        <button class="prompt-chip" onclick="quickSend('What features does LaunchDarkly offer?')">💬 "What features does LaunchDarkly offer?"</button>
+                        <button class="prompt-chip" onclick="quickSend('Explain how feature flags improve deployment safety')">💬 "How do feature flags improve deployment safety?"</button>
+                    </div>
                 </div>
             </div>
             
-            <!-- Feature Flag: Typing Indicator (Part 1: Release & Remediate) -->
+            <!-- Feature Flag: Typing Indicator -->
             <div id="typing-indicator" class="typing-indicator hidden">
                 Bot is typing...
             </div>
             
-            <!-- Feature Flag: Premium Summary Feature (Part 2: Targeting) -->
+            <!-- Feature Flag: Premium Summary Feature (Gated by LD) -->
             <div id="premium-features" class="premium-features hidden">
-                <button id="summarize-btn">🌟 Premium Feature: Summarize Chat</button>
+                <button id="summarize-btn">✨ <strong>Premium Entitlement Unlocked:</strong> Summarize Conversation</button>
             </div>
 
             <div class="input-area">
-                <input type="text" id="chat-input" placeholder="Type your message here..." />
+                <input type="text" id="chat-input" placeholder="Type your message here..." autocomplete="off" />
                 <button id="send-btn">Send</button>
             </div>
         </main>
+
     </div>
 
     <!-- Inject LD Configuration from Flask -->

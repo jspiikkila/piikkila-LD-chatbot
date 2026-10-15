@@ -188,5 +188,8 @@ def close_ld_client():
 atexit.register(close_ld_client)
 
 if __name__ == '__main__':
-    # Run the Flask app
-    app.run(debug=True, port=5000)
+    # Use port 5001 by default to prevent port conflicts with macOS ControlCenter / AirPlay on 5000
+    port = int(os.environ.get("PORT", 5001))
+    print(f"🚀 ChatOps AI running on http://localhost:{port}")
+    app.run(debug=True, port=port)
+
