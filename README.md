@@ -136,16 +136,16 @@ Configure your new `.env` file with your SDK keys and run `python app.py`.
 ### 2. Part 1: Automated Remediation (APM Incident & Flag Trigger Kill Switch)
 Demonstrate how an APM monitoring tool (Datadog, Dynatrace, New Relic) automatically heals a release regression:
 1. Ensure `enable-typing-indicator` is **ON**.
-2. In the app's top panel, check **"Simulate Production Latency Spike (APM Incident)"**.
+2. Click the **"🛠️ Demo Guide & Tools"** button in the header, then check **"Simulate Latency Spike (APM Alert)"**.
 3. Send a message in the chat.
 4. **Observe the regression:** Response latency spikes to 4.0s, and the APM monitor flags an active incident:  
    `⚠️ APM Alert: High Latency Detected (>3500ms) on feature 'enable-typing-indicator'`.
 5. **Remediate instantly via LaunchDarkly Webhook Trigger**:
-   * **Via Terminal:**
+   * **Via In-App Demo Tools:** Click the **⚡ Fire Kill Switch Trigger** button.
+   * **Or via Terminal:** Click **📋 Copy curl** and run it directly in your terminal:
      ```bash
      curl -X POST <YOUR_LD_TRIGGER_URL>
      ```
-   * **Or via In-App Demo Panel:** Paste your trigger URL into the field and click **⚡ Fire LD Trigger**.
 6. **Watch the Recovery in Real Time:**
    * LaunchDarkly executes the webhook trigger and turns `enable-typing-indicator` **OFF**.
    * The client SDK's streaming listener immediately catches the flag change: the typing indicator is unmounted, the APM alert clears, and latency immediately drops back to normal—**zero downtime, zero code redeploy, zero page refresh!**
@@ -156,26 +156,27 @@ Demonstrate how an APM monitoring tool (Datadog, Dynatrace, New Relic) automatic
 The app features three distinct personas that cleanly demonstrate LaunchDarkly's targeting hierarchy, coupled with a live **Evaluation Reason Inspector** powered by `variationDetail()`:
 
 1. **Default Fallthrough (Bob):**
-   * Select **"Bob (Free Plan - Default Rule)"** in the context switcher.
-   * Look at the **Targeting Inspector**:
+   * Select **"Bob (Free - Standard)"** in the persona dropdown.
+   * Look at the **Live Feature Flag Status** inside the Demo Tools drawer:
      * Active Context: `key: bob-standard`, `plan: free`, `role: viewer`.
      * Flag Evaluation: `false (Blocked)`.
      * Reason: `FALLTHROUGH (Default Rule: false)`.
      * The premium button is hidden.
 2. **Rule-Based Custom Attribute Target (Alice):**
-   * Switch the dropdown to **"Alice (Enterprise Plan - Rule Target)"**.
+   * Switch the dropdown to **"Alice (Enterprise - Rule Match)"**.
    * LaunchDarkly dynamically re-evaluates the context:
      * Active Context: `key: alice-corp`, `plan: enterprise`, `role: admin`.
      * Flag Evaluation: `true (Served)`.
      * Reason: `RULE_MATCH (Rule #1: plan = enterprise)`.
-     * The gold **"🌟 Premium Feature: Summarize Chat"** appears immediately!
+     * The gold **"✨ Premium Entitlement Unlocked: Summarize Conversation"** appears immediately above the input bar!
 3. **Individual Whitelist Target (Charlie - The Beta Tester):**
-   * Switch the dropdown to **"Charlie (Free Plan - Individual Target)"**.
+   * Switch the dropdown to **"Charlie (Free - Individual VIP)"**.
    * **The Key Takeaway for the Evaluator:** Charlie is on the `free` plan, yet the feature is **served** (`true`)!
      * Active Context: `key: charlie-beta`, `plan: free`, `role: tester`.
      * Flag Evaluation: `true (Served)`.
      * Reason: `TARGET_MATCH (Individual Target: charlie-beta)`.
    * This proves that Individual Targets take precedence over rules, enabling targeted canary testing and early access cohorts with zero ambiguity.
+
 
 
 ### 4. Extra Credit: AI Configs & Experimentation
