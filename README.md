@@ -189,6 +189,11 @@ The app features three distinct personas that cleanly demonstrate LaunchDarkly's
      * Client: `ldClient.track('bot-thumbs-up')`
      * Server: `ldclient.get().track('bot-thumbs-up', context)`
    * Direct the interviewer to the **Experiments > AI Prompt & Model Optimization** dashboard in LaunchDarkly to show live exposures and conversions being recorded.
+   * 💡 **Reviewer Tip (Simulate Batch Traffic):** You can generate realistic A/B experiment traffic anytime by running:
+     ```bash
+     python simulate_traffic.py
+     ```
+
 
 ---
 
