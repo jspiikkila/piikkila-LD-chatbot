@@ -45,11 +45,12 @@ def run_simulation(num_users=30):
         matched_model = "gpt-4" if "gpt-4" in model else "gpt-3.5-turbo"
         stats[matched_model]["exposures"] += 1
 
-        # Realistic conversion behavior: GPT-4 has ~75% satisfaction, GPT-3.5 has ~50%
-        conv_threshold = 0.75 if matched_model == "gpt-4" else 0.50
+        # Conversion behavior: strong positive lift for GPT-4 (90% vs 30%)
+        conv_threshold = 0.90 if matched_model == "gpt-4" else 0.30
         if random.random() < conv_threshold:
             stats[matched_model]["conversions"] += 1
             client.track("bot-thumbs-up", ctx)
+
 
     print("--- Simulation Results ---")
     for m, d in stats.items():
