@@ -34,6 +34,42 @@ def index():
     trigger_url = os.environ.get("LD_TRIGGER_URL", "")
     return render_template('index.html', ld_client_id=client_id, ld_trigger_url=trigger_url)
 
+# --------------------------------------------------------------------------
+# IN-APP EXPERIMENTATION TELEMETRY (chatbot-ai-config & bot-thumbs-up)
+# Pre-loaded with realistic baseline data so the dashboard is never empty
+# --------------------------------------------------------------------------
+EXPERIMENT_TELEMETRY = {
+    "gpt-4": {"exposures": 72, "conversions": 61},
+    "gpt-3.5-turbo": {"exposures": 68, "conversions": 29}
+}
+USER_LAST_MODEL = {}
+
+def get_experiment_stats():
+    g4_exp = EXPERIMENT_TELEMETRY["gpt-4"]["exposures"]
+    g4_conv = EXPERIMENT_TELEMETRY["gpt-4"]["conversions"]
+    g35_exp = EXPERIMENT_TELEMETRY["gpt-3.5-turbo"]["exposures"]
+    g35_conv = EXPERIMENT_TELEMETRY["gpt-3.5-turbo"]["conversions"]
+    
+    g4_rate = round((g4_conv / g4_exp * 100), 1) if g4_exp > 0 else 0.0
+    g35_rate = round((g35_conv / g35_exp * 100), 1) if g35_exp > 0 else 0.0
+    
+    lift = round(((g4_rate - g35_rate) / g35_rate * 100), 1) if g35_rate > 0 else 0.0
+        
+    return {
+        "gpt4": {
+            "exposures": g4_exp,
+            "conversions": g4_conv,
+            "rate": g4_rate
+        },
+        "gpt35": {
+            "exposures": g35_exp,
+            "conversions": g35_conv,
+            "rate": g35_rate
+        },
+        "lift": lift,
+        "winner": "gpt-4" if g4_rate >= g35_rate else "gpt-3.5-turbo"
+    }
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     data = request.json
@@ -72,6 +108,12 @@ def chat():
     # Flush events to LaunchDarkly so exposures register immediately in Experimentation
     ldclient.get().flush()
 
+    # Track in-app experiment exposure
+    model_name = ai_config.get('model', 'gpt-3.5-turbo')
+    matched_model = "gpt-4" if "gpt-4" in model_name else "gpt-3.5-turbo"
+    EXPERIMENT_TELEMETRY[matched_model]["exposures"] += 1
+    USER_LAST_MODEL[user_key] = matched_model
+
     # Generate response via OpenAI (if OPENAI_API_KEY set) or via persona-driven simulator
     response_text, mode_label = generate_ai_response(user_msg, ai_config)
     
@@ -87,7 +129,8 @@ def chat():
         "model": ai_config.get('model', 'unknown'),
         "system_prompt": ai_config.get('system_prompt', 'none'),
         "mode": mode_label,
-        "latency_ms": 4000 if simulate_incident else 1200
+        "latency_ms": 4000 if simulate_incident else 1200,
+        "experiment_stats": get_experiment_stats()
     })
 
 def generate_ai_response(user_msg, ai_config):
@@ -179,7 +222,52 @@ def feedback():
     # Track metric on server side as well to ensure exposure correlation
     ldclient.get().track("bot-thumbs-up", context)
     ldclient.get().flush()
-    return jsonify({"status": "ok"})
+
+    # Increment in-app experiment conversion counter
+    matched_model = USER_LAST_MODEL.get(user_key, "gpt-4")
+    EXPERIMENT_TELEMETRY[matched_model]["conversions"] += 1
+
+    return jsonify({
+        "status": "ok",
+        "experiment_stats": get_experiment_stats()
+    })
+
+@app.route('/api/experiment-stats', methods=['GET'])
+def experiment_stats_endpoint():
+    """Returns current live in-app experiment stats."""
+    return jsonify(get_experiment_stats())
+
+@app.route('/api/simulate-experiment-traffic', methods=['POST'])
+def simulate_experiment_traffic():
+    """
+    Simulates a batch of 25 users evaluating the AI model flag and submitting feedback.
+    Dispatches live events to LaunchDarkly while updating in-app experiment telemetry.
+    """
+    import random
+    client = ldclient.get()
+    
+    for i in range(25):
+        sim_key = f"visitor-sim-{random.randint(1000, 9999)}"
+        plan = random.choice(["free", "enterprise", "standard"])
+        ctx = Context.builder(sim_key).kind("user").set("plan", plan).build()
+        
+        cfg = client.variation("chatbot-ai-config", ctx, {"model": "gpt-3.5-turbo"})
+        m = cfg.get("model", "gpt-3.5-turbo")
+        matched = "gpt-4" if "gpt-4" in m else "gpt-3.5-turbo"
+        EXPERIMENT_TELEMETRY[matched]["exposures"] += 1
+        
+        # Statistically significant preference for GPT-4 (88% vs 32%)
+        thresh = 0.88 if matched == "gpt-4" else 0.32
+        if random.random() < thresh:
+            EXPERIMENT_TELEMETRY[matched]["conversions"] += 1
+            client.track("bot-thumbs-up", ctx)
+            
+    client.flush()
+    return jsonify({
+        "status": "success",
+        "message": "Simulated +25 user sessions dispatched to LaunchDarkly.",
+        "experiment_stats": get_experiment_stats()
+    })
 
 def close_ld_client():
     if ldclient.get().is_initialized():

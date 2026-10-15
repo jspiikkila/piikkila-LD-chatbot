@@ -242,7 +242,15 @@ function appendMessage(text, sender, meta = null) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_key: currentUser.key })
-            });
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.experiment_stats) {
+                    renderExperimentStats(data.experiment_stats);
+                }
+            })
+            .catch(err => console.warn("Feedback tracking error:", err));
+
             showToast("Feedback sent! Recorded in LaunchDarkly Experimentation.");
             thumbsUp.disabled = true;
             thumbsUp.style.opacity = '0.5';
@@ -282,16 +290,35 @@ if (triggerUrlInput) {
     });
 }
 
-// Drawer Toggle Handler
+// Drawer Toggle Handlers (Mutually exclusive for a clean UI)
 const drawerToggleBtn = document.getElementById('drawer-toggle-btn');
 const demoDrawer = document.getElementById('demo-drawer');
 const drawerChevron = document.getElementById('drawer-chevron');
 
+const expToggleBtn = document.getElementById('exp-toggle-btn');
+const experimentDrawer = document.getElementById('experiment-drawer');
+const expChevron = document.getElementById('exp-chevron');
+
 if (drawerToggleBtn && demoDrawer) {
     drawerToggleBtn.addEventListener('click', () => {
         const isHidden = demoDrawer.classList.toggle('hidden');
-        if (drawerChevron) {
-            drawerChevron.innerText = isHidden ? '▼' : '▲';
+        if (drawerChevron) drawerChevron.innerText = isHidden ? '▼' : '▲';
+        // Auto-close experiment drawer if demo drawer is opened
+        if (!isHidden && experimentDrawer && !experimentDrawer.classList.contains('hidden')) {
+            experimentDrawer.classList.add('hidden');
+            if (expChevron) expChevron.innerText = '▼';
+        }
+    });
+}
+
+if (expToggleBtn && experimentDrawer) {
+    expToggleBtn.addEventListener('click', () => {
+        const isHidden = experimentDrawer.classList.toggle('hidden');
+        if (expChevron) expChevron.innerText = isHidden ? '▼' : '▲';
+        // Auto-close demo drawer if experiment drawer is opened
+        if (!isHidden && demoDrawer && !demoDrawer.classList.contains('hidden')) {
+            demoDrawer.classList.add('hidden');
+            if (drawerChevron) drawerChevron.innerText = '▼';
         }
     });
 }
@@ -415,6 +442,10 @@ async function sendMessage() {
             prompt: data.system_prompt
         });
 
+        // Update in-app experiment stats if returned
+        if (data.experiment_stats) {
+            renderExperimentStats(data.experiment_stats);
+        }
 
         // If latency incident was simulated, show the APM alert banner
         if (isIncidentActive && apmAlert) {
@@ -433,6 +464,79 @@ chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
 });
 
+// -------------------------------------------------------------
+// LIVE EXPERIMENTATION DASHBOARD CONTROLS
+// -------------------------------------------------------------
+function renderExperimentStats(stats) {
+    if (!stats) return;
+
+    const g35Exp = document.getElementById('exp-gpt35-exp');
+    const g35Conv = document.getElementById('exp-gpt35-conv');
+    const g35Rate = document.getElementById('exp-gpt35-rate');
+    const g35Bar = document.getElementById('exp-gpt35-bar');
+
+    const g4Exp = document.getElementById('exp-gpt4-exp');
+    const g4Conv = document.getElementById('exp-gpt4-conv');
+    const g4Rate = document.getElementById('exp-gpt4-rate');
+    const g4Bar = document.getElementById('exp-gpt4-bar');
+    const winnerBadge = document.getElementById('exp-winner-badge');
+
+    if (g35Exp && stats.gpt35) g35Exp.innerText = stats.gpt35.exposures;
+    if (g35Conv && stats.gpt35) g35Conv.innerText = stats.gpt35.conversions;
+    if (g35Rate && stats.gpt35) g35Rate.innerText = `${stats.gpt35.rate}%`;
+    if (g35Bar && stats.gpt35) g35Bar.style.width = `${Math.min(stats.gpt35.rate, 100)}%`;
+
+    if (g4Exp && stats.gpt4) g4Exp.innerText = stats.gpt4.exposures;
+    if (g4Conv && stats.gpt4) g4Conv.innerText = stats.gpt4.conversions;
+    if (g4Rate && stats.gpt4) g4Rate.innerText = `${stats.gpt4.rate}%`;
+    if (g4Bar && stats.gpt4) g4Bar.style.width = `${Math.min(stats.gpt4.rate, 100)}%`;
+
+    if (winnerBadge) {
+        if (stats.lift > 0) {
+            winnerBadge.innerText = `🏆 Leading: ${stats.winner} (+${stats.lift}% Positive Lift)`;
+            winnerBadge.style.display = 'inline-block';
+        } else {
+            winnerBadge.innerText = `🏆 Leading: ${stats.winner}`;
+        }
+    }
+}
+
+async function fetchExperimentStats() {
+    try {
+        const res = await fetch('/api/experiment-stats');
+        if (res.ok) {
+            const stats = await res.json();
+            renderExperimentStats(stats);
+        }
+    } catch (e) {
+        console.warn("Could not fetch experiment stats:", e);
+    }
+}
+
+const simulateCohortBtn = document.getElementById('simulate-cohort-btn');
+if (simulateCohortBtn) {
+    simulateCohortBtn.addEventListener('click', async () => {
+        simulateCohortBtn.disabled = true;
+        simulateCohortBtn.innerText = "⏳ Generating...";
+        try {
+            const res = await fetch('/api/simulate-experiment-traffic', { method: 'POST' });
+            const data = await res.json();
+            if (res.ok && data.experiment_stats) {
+                renderExperimentStats(data.experiment_stats);
+                showToast("⚡ Simulated +25 test sessions dispatched to LaunchDarkly!");
+            } else {
+                showToast(`❌ Error: ${data.error || "Failed to simulate"}`);
+            }
+        } catch (e) {
+            showToast("❌ Network error simulating traffic");
+        } finally {
+            simulateCohortBtn.disabled = false;
+            simulateCohortBtn.innerText = "⚡ Simulate +25 Test Users";
+        }
+    });
+}
+
 // Start initialization
 initLaunchDarkly();
+fetchExperimentStats();
 

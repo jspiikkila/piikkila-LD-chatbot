@@ -32,6 +32,9 @@
                         <option value="beta">Charlie (Free - Individual VIP)</option>
                     </select>
                 </div>
+                <button id="exp-toggle-btn" class="drawer-toggle-btn" title="Toggle Live Experiment Results">
+                    📊 Experiment Results <span id="exp-chevron">▼</span>
+                </button>
                 <button id="drawer-toggle-btn" class="drawer-toggle-btn" title="Toggle Demo Guide & Tools">
                     🛠️ Demo Guide & Tools <span id="drawer-chevron">▼</span>
                 </button>
@@ -111,7 +114,54 @@
                     </div>
                 </div>
             </div>
+        </section>
 
+        <!-- Collapsible AI Experiment Results Dropdown -->
+        <section id="experiment-drawer" class="demo-drawer hidden">
+            <div class="drawer-card experiment-card">
+                <div class="exp-card-header">
+                    <div class="exp-title-group">
+                        <h3>📊 Live AI Experiment Results (<code>chatbot-ai-config</code> &amp; <code>bot-thumbs-up</code>)</h3>
+                        <span id="exp-winner-badge" class="exp-winner-pill">🏆 Leading: gpt-4 (+98.8% Positive Lift)</span>
+                    </div>
+                    <button id="simulate-cohort-btn" class="secondary-btn exp-sim-btn" title="Simulate 25 users and send metrics directly to LaunchDarkly">
+                        ⚡ Simulate +25 Test Users
+                    </button>
+                </div>
+
+                <div class="exp-grid">
+                    <div class="exp-variant-col">
+                        <div class="variant-header">
+                            <span class="variant-name">Variant A: <code>gpt-3.5-turbo</code> (Concise)</span>
+                            <span id="exp-gpt35-rate" class="variant-rate">42.6%</span>
+                        </div>
+                        <div class="exp-progress-bar">
+                            <div id="exp-gpt35-bar" class="exp-progress-fill variant-a" style="width: 42.6%;"></div>
+                        </div>
+                        <div class="variant-stats">
+                            <span>Sessions: <strong id="exp-gpt35-exp">68</strong></span>
+                            <span>Thumbs Up (👍): <strong id="exp-gpt35-conv">29</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="exp-variant-col winner-col">
+                        <div class="variant-header">
+                            <span class="variant-name">Variant B: <code>gpt-4</code> (Enterprise Expert)</span>
+                            <span id="exp-gpt4-rate" class="variant-rate winner-text">84.7%</span>
+                        </div>
+                        <div class="exp-progress-bar">
+                            <div id="exp-gpt4-bar" class="exp-progress-fill variant-b" style="width: 84.7%;"></div>
+                        </div>
+                        <div class="variant-stats">
+                            <span>Sessions: <strong id="exp-gpt4-exp">72</strong></span>
+                            <span>Thumbs Up (👍): <strong id="exp-gpt4-conv">61</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="exp-card-footer">
+                    <span>ℹ️ <strong>Live Metric Ingestion:</strong> Sending messages or clicking <code>👍 Helpful</code> in chat updates these metrics in real time via the LaunchDarkly Server SDK.</span>
+                </div>
+            </div>
         </section>
 
         <!-- Live APM Alert Banners -->

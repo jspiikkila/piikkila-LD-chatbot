@@ -184,16 +184,17 @@ The app features three distinct personas that cleanly demonstrate LaunchDarkly's
    * Send a chat message. Notice the bot responds with an active AI metadata badge:  
      `⚡ Simulated gpt-3.5-turbo (Concise Mode)` or `⚡ Simulated gpt-4 (Enterprise Expert Mode)` (or `⚡ Live OpenAI` if an API key is provided).
    * Explain how `chatbot-ai-config` controls the model parameters and system prompt entirely on the backend with zero code redeploys.
-2. **Telemetry & Experimentation**:
-   * Click the **👍 Helpful** feedback button under a bot response.
+2. **In-App Live Experiment Results (Zero Tab-Switching)**:
+   * Click the **"📊 Experiment Results ▼"** dropdown button in the header:
+     * Directly displays live exposures, conversions, and conversion rates comparing **Variant A (`gpt-3.5-turbo`)** vs. **Variant B (`gpt-4`)**.
+     * Pre-populated with realistic baseline data and visual progress bars showing `gpt-4` leading with a statistically significant positive lift (+98.8%).
+3. **Telemetry & Live Metric Ingestion**:
+   * Click the **👍 Helpful** feedback button under any bot response.
    * Both the client and server SDK record the custom metric event:
      * Client: `ldClient.track('bot-thumbs-up')`
      * Server: `ldclient.get().track('bot-thumbs-up', context)`
-   * Direct the interviewer to the **Experiments > AI Prompt & Model Optimization** dashboard in LaunchDarkly to show live exposures and conversions being recorded.
-   * 💡 **Reviewer Tip (Simulate Batch Traffic):** You can generate realistic A/B experiment traffic anytime by running:
-     ```bash
-     python simulate_traffic.py
-     ```
+   * The in-app counter increments immediately on screen, and the event is dispatched to LaunchDarkly's cloud experiment engine.
+   * 💡 **One-Click Live Simulation:** Click the **`⚡ Simulate +25 Test Users`** button directly inside the dropdown to dispatch 25 simulated user sessions and metric events to LaunchDarkly and watch the live percentages update on-screen!
 
 
 ---
