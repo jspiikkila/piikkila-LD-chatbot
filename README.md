@@ -29,7 +29,7 @@ Choose the path that best matches your evaluation preference:
 
 | Path | When to Choose | Time Required |
 | :--- | :--- | :--- |
-| **Option A: Fast-Track (Recommended)** | Choose this if you want to test the live app **immediately** without spending time configuring flags. Uses the candidate's active LaunchDarkly tenant. | **~2 minutes** |
+| **Option A: Fast-Track (Recommended)** | Choose this if you want to test the live app **immediately** without spending time configuring flags. Uses the jspiikkila's active LaunchDarkly tenant. | **~2 minutes** |
 | **Option B: Recreate from Scratch** | Choose this if you want to test clean-room deployment by creating fresh flags in your own LaunchDarkly account. | **~10 minutes** |
 
 ---
