@@ -1,4 +1,4 @@
-# ChatOps AI - LaunchDarkly Homework Exercise
+# ChatOps AI - LD Exercise
 
 This repository is a demonstration of LaunchDarkly's basic capabilities, fulfilling all requirements of the SE Technical Exercise. 
 
